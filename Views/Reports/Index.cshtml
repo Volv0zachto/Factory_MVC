@@ -1,0 +1,29 @@
+﻿@{
+    ViewData["Title"] = "Reports";
+}
+
+<h1>Select Dates to Generate Reports</h1>
+
+<form method="get" action="@Url.Action("MaterialUsageReport", "Reports")">
+    <div>
+        <label for="startDate">Start Date</label>
+        <input type="date" id="startDate" name="startDate" value="@DateTime.Now.AddMonths(-1).ToString("yyyy-MM-dd")" />
+    </div>
+    <div>
+        <label for="endDate">End Date</label>
+        <input type="date" id="endDate" name="endDate" value="@DateTime.Now.ToString("yyyy-MM-dd")" />
+    </div>
+    <button type="submit">Generate Material Usage Report</button>
+</form>
+
+<form method="get" action="@Url.Action("AverageMaterialConsumptionReport", "Reports")">
+    <div>
+        <label for="startDate">Start Date</label>
+        <input type="date" id="startDate" name="startDate" value="@DateTime.Now.AddMonths(-1).ToString("yyyy-MM-dd")" />
+    </div>
+    <div>
+        <label for="endDate">End Date</label>
+        <input type="date" id="endDate" name="endDate" value="@DateTime.Now.ToString("yyyy-MM-dd")" />
+    </div>
+    <button type="submit">Generate Average Material Consumption Report</button>
+</form>

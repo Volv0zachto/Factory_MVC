@@ -1,0 +1,33 @@
+﻿@model IEnumerable<Equipment>
+
+@{
+    ViewData["Title"] = "Equipments";
+}
+
+<h2>Equipments</h2>
+
+<p>
+    <a href="@Url.Action("Create")" class="btn btn-primary">Create New Equipment</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var equipment in Model)
+        {
+            <tr>
+                <td>@equipment.Name</td>
+                <td>
+                    <form action="@Url.Action("Delete", new { id = equipment.EquipmentId })" method="post" style="display:inline;">
+                        <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this equipment?');">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,37 @@
+﻿@model Materials.Models.MaterialRecord
+
+@{
+    ViewData["Title"] = "Create Material Record";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<form asp-action="Create" method="post">
+    <div class="form-group">
+        <label asp-for="MaterialId" class="control-label"></label>
+        <select asp-for="MaterialId" class="form-control" asp-items="@(new SelectList(ViewBag.Materials, "MaterialId", "Name"))">
+            <option value="">Select Material</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="EquipmentId" class="control-label"></label>
+        <select asp-for="EquipmentId" class="form-control" asp-items="@(new SelectList(ViewBag.Equipments, "EquipmentId", "Name"))">
+            <option value="">Select Equipment</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Quantity" class="control-label"></label>
+        <input asp-for="Quantity" type="number" step="any" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="RecordDate" class="control-label"></label>
+        <input asp-for="RecordDate" type="date" class="form-control" />
+    </div>
+
+    <button type="submit" class="btn btn-primary mt-2 mb-2">Create</button>
+</form>
+
+<a href="@Url.Action("Index", "MaterialRecords")" class="btn btn-secondary">Back to List</a>

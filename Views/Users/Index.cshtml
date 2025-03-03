@@ -1,0 +1,38 @@
+﻿@model IEnumerable<Materials.Models.User>
+
+@{
+    ViewData["Title"] = "Users";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<p>
+    <a href="@Url.Action("Create")" class="btn btn-primary">Create New User</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>User Name</th>
+            <th>Password</th>
+            <th>Role</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>@user.UserName</td>
+                <td>@user.Password</td>
+                <td>@user.Role?.Name</td>
+                <td>
+                    <a href="@Url.Action("Edit", new { id = user.UserId })" class="btn btn-warning">Edit</a>
+                    <form action="@Url.Action("Delete", new { id = user.UserId })" method="post" style="display:inline;">
+                        <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this user?');">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,41 @@
+﻿@model IEnumerable<Materials.Models.Material>
+
+@{
+    ViewData["Title"] = "Materials List";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<p>
+    <a href="@Url.Action("Create")" class="btn btn-primary">Create New Material</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Unit</th>
+            <th>Quantity</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var material in Model)
+        {
+            <tr>
+                <td>@material.Name</td>
+                <td>@material.Unit</td>
+                <td>@material.Quantity</td>
+                <td>
+                    <form method="post" action="@Url.Action("IncreaseQuantity", new { id = material.MaterialId })" style="display:inline;">
+                        <input type="number" name="quantityToAdd" placeholder="Quantity to add" />
+                        <button type="submit" class="btn btn-success">Increase Quantity</button>
+                    </form>
+                    <form action="@Url.Action("Delete", new { id = material.MaterialId })" method="post" style="display:inline;">
+                        <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this material?');">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

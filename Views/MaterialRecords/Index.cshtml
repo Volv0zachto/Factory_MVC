@@ -1,0 +1,41 @@
+﻿@model IEnumerable<Materials.Models.MaterialRecord>
+
+@{
+    ViewData["Title"] = "Material Records";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<p>
+    <a href="@Url.Action("Create", "MaterialRecords")" class="btn btn-primary">Create New Record</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Material</th>
+            <th>Equipment</th>
+            <th>User</th>
+            <th>Quantity</th>
+            <th>Record Date</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var record in Model)
+        {
+            <tr>
+                <td>@record.Material.Name</td>
+                <td>@record.Equipment.Name</td>
+                <td>@record.User.UserName</td>
+                <td>@record.Quantity</td>
+                <td>@record.RecordDate.ToString("MM/dd/yyyy")</td>
+                <td>
+                    <form method="post" action="@Url.Action("Delete", "MaterialRecords", new { id = record.RecordId })" onsubmit="return confirm('Are you sure you want to delete this record?');">
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

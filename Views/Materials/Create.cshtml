@@ -1,0 +1,26 @@
+﻿@model Materials.Models.Material
+
+@{
+    ViewData["Title"] = "Create New Material";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<form method="post">
+
+    <div class="form-group">
+        <label asp-for="Name">Name</label>
+        <input type="text" class="form-control" asp-for="Name" required />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Unit">Unit</label>
+        <input type="text" class="form-control" asp-for="Unit" required />
+    </div>
+
+    <input asp-for="Quantity" value="0" hidden />
+
+    <button type="submit" class="btn btn-primary mt-2 mb-2">Create</button>
+</form>
+
+<a href="@Url.Action("Index")" class="btn btn-secondary">Back to List</a>

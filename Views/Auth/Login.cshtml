@@ -1,0 +1,29 @@
+﻿@using Materials.Models;
+@model User;
+
+@{
+    ViewData["Title"] = "Login";
+}
+
+<h2>Login</h2>
+
+<form asp-action="Login" method="post">
+
+    <div class="form-group">
+        <label asp-for="@Model.UserName">User Name</label>
+        <input asp-for="@Model.UserName" type="text" class="form-control" required />
+    </div>
+    <div class="form-group">
+        <label asp-for="@Model.Password">Password</label>
+        <input asp-for="@Model.Password" type="password" class="form-control" required />
+    </div>
+
+    @if (TempData["error"] != null)
+    {
+        <div class="alert alert-danger mt-2">
+            @TempData["error"]
+        </div>
+    }
+
+    <button type="submit" class="btn btn-primary mt-3">Login</button>
+</form>

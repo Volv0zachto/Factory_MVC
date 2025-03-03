@@ -1,0 +1,28 @@
+﻿@using Materials.ViewModels
+@model IEnumerable<AverageMaterialConsumptionReportViewModel>
+
+@{
+    ViewData["Title"] = "Average Material Consumption Report";
+}
+
+<h1 class="mb-4">Average Material Consumption Report</h1>
+
+<table class="table table-striped table-bordered">
+    <thead class="thead-light">
+        <tr>
+            <th>Material Name</th>
+            <th>Total Used</th>
+            <th>Average Consumption Per Day</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Material.Name</td>
+                <td>@item.TotalUsed</td>
+                <td>@item.AverageConsumptionPerDay.ToString("F2")</td>
+            </tr>
+        }
+    </tbody>
+</table>
