@@ -38,26 +38,36 @@ namespace Materials.Controllers
             }
             return View(material);
         }
-
         [HttpPost]
         public async Task<IActionResult> IncreaseQuantity(int id, double quantityToAdd)
         {
             var material = await _context.Materials.FindAsync(id);
-            if (material != null)
+            if (material == null)
             {
-                material.Quantity += quantityToAdd;
-                _context.Materials.Update(material);
-
-                var materialLog = new MaterialLog
-                {
-                    LogType = LogType.Add,
-                    Material = material,
-                    Quantity = quantityToAdd
-                };
-                await _context.MaterialLogs.AddAsync(materialLog);
-
-                await _context.SaveChangesAsync();
+                TempData["error"] = "Ошибка: Материал не найден!";
+                return RedirectToAction("Index");
             }
+
+            double newQuantity = material.Quantity + quantityToAdd;
+
+            if (newQuantity <= 0)
+            {
+                await Delete(id); 
+                return RedirectToAction("Index");
+            }
+
+            material.Quantity = newQuantity;
+            _context.Materials.Update(material);
+
+            var materialLog = new MaterialLog
+            {
+                LogType = quantityToAdd > 0 ? LogType.Add : LogType.Remove,
+                Material = material,
+                Quantity = Math.Abs(quantityToAdd) 
+            };
+            await _context.MaterialLogs.AddAsync(materialLog);
+
+            await _context.SaveChangesAsync();
             return RedirectToAction("Index");
         }
 

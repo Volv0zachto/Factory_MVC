@@ -7,15 +7,16 @@
 <h1>@ViewData["Title"]</h1>
 
 <form method="post">
-
     <div class="form-group">
         <label asp-for="Name">Name</label>
         <input type="text" class="form-control" asp-for="Name" required />
+        <span asp-validation-for="Name" class="text-danger"></span> 
     </div>
 
     <div class="form-group">
         <label asp-for="Unit">Unit</label>
         <input type="text" class="form-control" asp-for="Unit" required />
+        <span asp-validation-for="Unit" class="text-danger"></span> 
     </div>
 
     <input asp-for="Quantity" value="0" hidden />
