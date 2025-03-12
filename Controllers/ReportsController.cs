@@ -43,18 +43,20 @@ namespace Materials.Controllers
                     TotalUsed = g.Sum(r => r.Quantity)
                 }).ToListAsync();
 
-            var report = await Task.WhenAll(materialsUsage.Select(async item =>
+            var materialIds = materialsUsage.Select(m => m.MaterialId).ToList();
+            var materials = await _context.Materials
+                .Where(m => materialIds.Contains(m.MaterialId))
+                .ToDictionaryAsync(m => m.MaterialId);
+
+            var report = materialsUsage.Select(item => new MaterialUsageReportViewModel
             {
-                var material = await _context.Materials.FirstOrDefaultAsync(m => m.MaterialId == item.MaterialId);
-                return new MaterialUsageReportViewModel
-                {
-                    Material = material,
-                    TotalUsed = item.TotalUsed,
-                };
-            }));
+                Material = materials.TryGetValue(item.MaterialId, out var material) ? material : null,
+                TotalUsed = item.TotalUsed,
+            }).ToList();
 
             return View(report);
         }
+
 
         public async Task<ActionResult> AverageMaterialConsumptionReport(DateTime? startDate, DateTime? endDate)
         {
@@ -69,24 +71,33 @@ namespace Materials.Controllers
                 endDate = endDate.Value.ToUniversalTime();
             }
 
+            int daysInPeriod = (endDate - startDate).Value.Days;
+    
+            if (daysInPeriod == 0) daysInPeriod = 1; 
+
             var materialConsumption = await _context.MaterialRecords
                 .Where(r => r.RecordDate >= startDate && r.RecordDate <= endDate)
                 .GroupBy(r => r.MaterialId)
                 .Select(g => new
                 {
                     MaterialId = g.Key,
-                    TotalUsed = g.Sum(r => r.Quantity),
-                    DaysInPeriod = (endDate - startDate).Value.Days
+                    TotalUsed = g.Sum(r => r.Quantity)
                 }).ToListAsync();
 
-            var report = await Task.WhenAll(materialConsumption.Select(async item => new AverageMaterialConsumptionReportViewModel
+            var materialIds = materialConsumption.Select(m => m.MaterialId).ToList();
+            var materials = await _context.Materials
+                .Where(m => materialIds.Contains(m.MaterialId))
+                .ToDictionaryAsync(m => m.MaterialId);
+
+            var report = materialConsumption.Select(item => new AverageMaterialConsumptionReportViewModel
             {
-                Material = await _context.Materials.FirstOrDefaultAsync(m => m.MaterialId == item.MaterialId),
+                Material = materials.TryGetValue(item.MaterialId, out var material) ? material : null,
                 TotalUsed = item.TotalUsed,
-                AverageConsumptionPerDay = item.TotalUsed / item.DaysInPeriod
-            }).ToList());
+                AverageConsumptionPerDay = (double)item.TotalUsed / daysInPeriod
+            }).ToList();
 
             return View(report);
         }
+
     }
 }

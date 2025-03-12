@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Materials.Data
 {
