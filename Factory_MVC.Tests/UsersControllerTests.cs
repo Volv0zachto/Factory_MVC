@@ -77,11 +77,14 @@ namespace Materials.Tests
             var newUser = new User { UserId = 3, UserName = "AccountantUser", Password = "password", RoleId = 3 };
 
             // Act
-            await controller.Create(newUser);
+            Console.WriteLine("\n=== ТЕСТ-КЕЙС: Добавление нового пользователя ===");
             var result = await controller.Index() as ViewResult;
             var model = result?.Model as List<User>;
+            Console.WriteLine($"[✅ Получено] {model?.Count} пользователей");
 
-            Console.WriteLine("\n=== ТЕСТ-КЕЙС: Добавление нового пользователя ===");
+            await controller.Create(newUser);
+            result = await controller.Index() as ViewResult;
+            model = result?.Model as List<User>;
             Console.WriteLine($"[🔵 Ожидалось] 3 пользователя в списке");
             Console.WriteLine($"[✅ Получено] {model?.Count} пользователей");
 

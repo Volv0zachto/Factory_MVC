@@ -89,12 +89,15 @@ public class MaterialRecordsControllerTests
         var newRecord = new MaterialRecord { MaterialId = 1, EquipmentId = 1, UserId = 1, Quantity = 10, RecordDate = DateTime.UtcNow };
 
         // Act
-        await controller.Create(newRecord);
+        Console.WriteLine("\n=== ТЕСТ-КЕЙС: Создание новой записи расхода ===");
         var result = await controller.Index() as ViewResult;
         var model = result?.Model as List<MaterialRecord>;
+        Console.WriteLine($"[✅ Получено] {model?.Count} записей");
 
+        await controller.Create(newRecord);
+        result = await controller.Index() as ViewResult;
+        model = result?.Model as List<MaterialRecord>;
         // Вывод в формате тест-кейса
-        Console.WriteLine("\n=== ТЕСТ-КЕЙС: Создание новой записи расхода ===");
         Console.WriteLine($"[🔵 Ожидалось] 2 записи в системе");
         Console.WriteLine($"[✅ Получено] {model?.Count} записей");
 

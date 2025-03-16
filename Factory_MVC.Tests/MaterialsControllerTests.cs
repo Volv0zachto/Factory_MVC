@@ -72,12 +72,15 @@ public class MaterialsControllerTests
         var newMaterial = new Material { MaterialId = 3, Name = "Картридж", Unit = "шт", Quantity = 2 };
 
         // Act
-        await controller.Create(newMaterial);
+        Console.WriteLine("\n=== ТЕСТ-КЕЙС: Добавление нового материала ===");
         var result = await controller.Index() as ViewResult;
         var model = result?.Model as List<Material>;
+        Console.WriteLine($"[✅ Получено] {model?.Count} материалов");
 
+        await controller.Create(newMaterial);
+        result = await controller.Index() as ViewResult;
+        model = result?.Model as List<Material>;
         // Формируем вывод как тест-кейс
-        Console.WriteLine("\n=== ТЕСТ-КЕЙС: Добавление нового материала ===");
         Console.WriteLine($"[🔵 Ожидалось] 3 материала в списке");
         Console.WriteLine($"[✅ Получено] {model?.Count} материалов");
 
