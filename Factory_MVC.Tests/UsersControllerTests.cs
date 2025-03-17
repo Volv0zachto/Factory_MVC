@@ -149,53 +149,46 @@ namespace Materials.Tests
             Assert.DoesNotContain(model, u => u.UserId == 1);
         }
 
+        
         [Fact]
         public async Task Edit_UpdatesUser()
         {
             // Arrange
             var controller = GetControllerWithDbContext();
-            var dbContextOptions = new DbContextOptionsBuilder<ApplicationDbContext>()
-                .UseInMemoryDatabase(databaseName: "TestUsersDatabase")
-                .Options;
 
-            // Открываем новый контекст и загружаем пользователя без отслеживания
-            using (var context = new ApplicationDbContext(dbContextOptions))
+            // Получаем пользователя из базы
+            var resultBeforeEdit = await controller.Index() as ViewResult;
+            var modelBeforeEdit = resultBeforeEdit?.Model as List<User>;
+            var userToEdit = modelBeforeEdit?.FirstOrDefault(u => u.UserId == 1);
+    
+            if (userToEdit == null)
             {
-                var userInDb = await context.Users.AsNoTracking().FirstOrDefaultAsync(u => u.UserId == 1);
-                if (userInDb == null)
-                {
-                    Console.WriteLine("[❌ Ошибка] Пользователь с ID=1 не найден! Тест невозможен.");
-                    Assert.Fail("User с ID=1 не существует, тест не может быть выполнен.");
-                    return;
-                }
-
-                Console.WriteLine("\n=== ТЕСТ-КЕЙС: Редактирование пользователя ===");
-                Console.WriteLine($"[📌 Исходное имя пользователя] {userInDb.UserName}");
-
-                // Изменяем имя
-                userInDb.UserName = "UpdatedAdmin";
-
-                // Открываем новый контекст для обновления
-                using (var updateContext = new ApplicationDbContext(dbContextOptions))
-                {
-                    updateContext.Users.Update(userInDb);
-                    await updateContext.SaveChangesAsync();
-                }
+                Assert.Fail("Пользователь с ID=1 не найден, тест невозможен.");
+                return;
             }
 
-            // Проверяем изменения через новый контекст
-            using (var verificationContext = new ApplicationDbContext(dbContextOptions))
-            {
-                var updatedUser = await verificationContext.Users.FirstOrDefaultAsync(u => u.UserId == 1);
+            Console.WriteLine("\n=== ТЕСТ-КЕЙС: Редактирование пользователя ===");
+            Console.WriteLine($"[📌 Исходное имя пользователя] {userToEdit.UserName}");
 
-                Console.WriteLine($"[🔵 Ожидалось] Пользователь с ID=1 теперь 'UpdatedAdmin'");
-                Console.WriteLine($"[✅ Получено] Пользователь с ID=1 теперь '{updatedUser?.UserName}'");
+            // Изменяем имя пользователя
+            userToEdit.UserName = "UpdatedAdmin";
 
-                // Assert
-                Assert.NotNull(updatedUser);
-                Assert.Equal("UpdatedAdmin", updatedUser.UserName);
-            }
+            // Act
+            await controller.Edit(userToEdit);
+
+            // Проверяем изменения через вызов Index()
+            var resultAfterEdit = await controller.Index() as ViewResult;
+            var modelAfterEdit = resultAfterEdit?.Model as List<User>;
+            var updatedUser = modelAfterEdit?.FirstOrDefault(u => u.UserId == 1);
+
+            Console.WriteLine($"[🔵 Ожидалось] Пользователь с ID=1 теперь 'UpdatedAdmin'");
+            Console.WriteLine($"[✅ Получено] Пользователь с ID=1 теперь '{updatedUser?.UserName}'");
+
+            // Assert
+            Assert.NotNull(updatedUser);
+            Assert.Equal("UpdatedAdmin", updatedUser.UserName);
         }
+
 
     }
 }
