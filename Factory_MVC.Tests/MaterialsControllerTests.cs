@@ -21,7 +21,7 @@ public class MaterialsControllerTests
         context.Database.EnsureDeleted();
         context.Database.EnsureCreated();
 
-        // Добавляем тестовые данные
+       
         var material1 = new Material { MaterialId = 1, Name = "Бумага", Unit = "лист", Quantity = 50 };
         var material2 = new Material { MaterialId = 2, Name = "Чернила", Unit = "мл", Quantity = 100 };
 
@@ -34,14 +34,14 @@ public class MaterialsControllerTests
     [Fact]
     public async Task Index_ReturnsViewWithMaterials()
     {
-        // Arrange
+       
         var controller = GetControllerWithDbContext();
 
-        // Act
+       
         var result = await controller.Index() as ViewResult;
         var model = result?.Model as List<Material>;
 
-        // Формируем вывод как тест-кейс
+       
         Console.WriteLine("\n=== ТЕСТ-КЕЙС: Список материалов ===");
         Console.WriteLine($"[🔵 Ожидалось] 2 материала в списке");
         Console.WriteLine($"[✅ Получено] {model?.Count} материалов");
@@ -58,7 +58,6 @@ public class MaterialsControllerTests
             Console.WriteLine("[❌ Ошибка] Список материалов пуст!");
         }
 
-        // Assert
         Assert.NotNull(result);
         Assert.NotNull(model);
         Assert.Equal(2, model.Count);
@@ -67,11 +66,11 @@ public class MaterialsControllerTests
     [Fact]
     public async Task Create_AddsNewMaterial()
     {
-        // Arrange
+        
         var controller = GetControllerWithDbContext();
         var newMaterial = new Material { MaterialId = 3, Name = "Картридж", Unit = "шт", Quantity = 2 };
 
-        // Act
+      
         Console.WriteLine("\n=== ТЕСТ-КЕЙС: Добавление нового материала ===");
         var result = await controller.Index() as ViewResult;
         var model = result?.Model as List<Material>;
@@ -80,7 +79,7 @@ public class MaterialsControllerTests
         await controller.Create(newMaterial);
         result = await controller.Index() as ViewResult;
         model = result?.Model as List<Material>;
-        // Формируем вывод как тест-кейс
+        
         Console.WriteLine($"[🔵 Ожидалось] 3 материала в списке");
         Console.WriteLine($"[✅ Получено] {model?.Count} материалов");
 
@@ -92,7 +91,7 @@ public class MaterialsControllerTests
             }
         }
 
-        // Assert
+        
         Assert.NotNull(result);
         Assert.NotNull(model);
         Assert.Equal(3, model.Count);
@@ -102,10 +101,10 @@ public class MaterialsControllerTests
     [Fact]
     public async Task Delete_RemovesMaterial()
     {
-        // Arrange
+       
         var controller = GetControllerWithDbContext();
     
-        // Получаем список материалов ДО удаления
+        
         var initialResult = await controller.Index() as ViewResult;
         var initialModel = initialResult?.Model as List<Material>;
 
@@ -121,7 +120,7 @@ public class MaterialsControllerTests
         // Act
         await controller.Delete(1);
 
-        // Получаем список материалов ПОСЛЕ удаления
+     
         var result = await controller.Index() as ViewResult;
         var model = result?.Model as List<Material>;
 
@@ -137,7 +136,7 @@ public class MaterialsControllerTests
             }
         }
 
-        // Assert
+       
         Assert.NotNull(result);
         Assert.NotNull(model);
         Assert.Single(model);
@@ -147,12 +146,12 @@ public class MaterialsControllerTests
     [Fact]
     public async Task IncreaseQuantity_UpdatesMaterialQuantity()
     {
-        // Arrange
+       
         var controller = GetControllerWithDbContext();
         int materialId = 1;
         double addedQuantity = 20;
 
-        // Act
+       
         var result = await controller.Index() as ViewResult;
         var model = result?.Model as List<Material>;
         var updatedMaterial = model?.FirstOrDefault(m => m.MaterialId == materialId);
@@ -163,11 +162,11 @@ public class MaterialsControllerTests
         result = await controller.Index() as ViewResult;
         model = result?.Model as List<Material>;
         updatedMaterial = model?.FirstOrDefault(m => m.MaterialId == materialId);
-        // Формируем вывод как тест-кейс
+       
         Console.WriteLine($"[🔵 Ожидалось] У материала 'Бумага' должно стать 70 листов (50+20)");
         Console.WriteLine($"[✅ Получено]  Материал '{updatedMaterial?.Name}'  {updatedMaterial?.Quantity} {updatedMaterial?.Unit}");
 
-        // Assert
+     
         Assert.NotNull(result);
         Assert.NotNull(model);
         Assert.Equal(70, updatedMaterial?.Quantity);

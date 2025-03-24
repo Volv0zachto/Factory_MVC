@@ -20,10 +20,9 @@ public class MaterialRecordsControllerTests
             .Options;
 
         var context = new ApplicationDbContext(options);
-        context.Database.EnsureDeleted(); // Очищаем базу перед тестом
+        context.Database.EnsureDeleted(); 
         context.Database.EnsureCreated();
 
-        // Добавляем тестовые данные
         var material = new Material { MaterialId = 1, Name = "Бумага", Unit = "лист", Quantity = 50 };
         var equipment = new Equipment { EquipmentId = 1, Name = "Принтер" };
         var user = new User { UserId = 1, UserName = "admin", Password = "password123" };
@@ -41,7 +40,6 @@ public class MaterialRecordsControllerTests
 
         var controller = new MaterialRecordsController(context);
 
-        // Устанавливаем мокнутый `HttpContext` с пользователем
         var claims = new List<Claim> { new Claim(ClaimTypes.Name, "admin") };
         var identity = new ClaimsIdentity(claims, "TestAuth");
         var userPrincipal = new ClaimsPrincipal(identity);
@@ -62,7 +60,6 @@ public class MaterialRecordsControllerTests
         var result = await controller.Index() as ViewResult;
         var model = result?.Model as List<MaterialRecord>;
 
-        // Вывод в формате тест-кейса
         Console.WriteLine("\n=== ТЕСТ-КЕЙС: Список записей расхода материалов ===");
         Console.WriteLine($"[🔵 Ожидалось] 1 запись в системе");
         Console.WriteLine($"[✅ Получено] {model?.Count} записей");
@@ -97,7 +94,6 @@ public class MaterialRecordsControllerTests
         await controller.Create(newRecord);
         result = await controller.Index() as ViewResult;
         model = result?.Model as List<MaterialRecord>;
-        // Вывод в формате тест-кейса
         Console.WriteLine($"[🔵 Ожидалось] 2 записи в системе");
         Console.WriteLine($"[✅ Получено] {model?.Count} записей");
 
@@ -144,7 +140,6 @@ public async Task Delete_RemovesMaterialRecordAndRestoresMaterialQuantity()
     await controller.Delete(1);
     Console.WriteLine("[✅ Вызов] Метод Delete() завершён!");
 
-    // Создаём новый `context`, чтобы загрузить актуальные данные
     var updatedContext = new ApplicationDbContext(new DbContextOptionsBuilder<ApplicationDbContext>()
         .UseInMemoryDatabase(databaseName: "TestMaterialRecordsDatabase")
         .Options);
@@ -156,7 +151,7 @@ public async Task Delete_RemovesMaterialRecordAndRestoresMaterialQuantity()
     Console.WriteLine($"[🔵 Ожидалось] Количество материала: {originalQuantity} + {recordQuantity} = {originalQuantity + recordQuantity}");
     Console.WriteLine($"[✅ Получено] Количество материала: {updatedMaterial?.Quantity ?? -1}");
 
-    // Assert
+   
     Assert.NotNull(updatedMaterial);
     Assert.Equal(originalQuantity + recordQuantity, updatedMaterial.Quantity);
     Assert.Empty(updatedContext.MaterialRecords);

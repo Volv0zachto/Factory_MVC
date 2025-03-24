@@ -23,14 +23,14 @@ namespace Materials.Tests
             context.Database.EnsureDeleted();
             context.Database.EnsureCreated();
 
-            // Добавляем тестовые роли
+            
             var adminRole = new Role { RoleId = 1, Name = "Admin" };
             var bossRole = new Role { RoleId = 2, Name = "Boss" };
             var accountantRole = new Role { RoleId = 3, Name = "Accountant" };
             context.Roles.AddRange(adminRole, bossRole, accountantRole);
             context.SaveChanges();
 
-            // Добавляем тестовых пользователей
+            
             var user1 = new User
                 { UserId = 1, UserName = "AdminUser", Password = "12345", RoleId = 1, Role = adminRole };
             var user2 = new User
@@ -106,10 +106,10 @@ namespace Materials.Tests
         [Fact]
         public async Task Delete_RemovesUser()
         {
-            // Arrange
+           
             var controller = GetControllerWithDbContext();
 
-            // Получаем пользователей ДО удаления
+           
             var initialResult = await controller.Index() as ViewResult;
             var initialModel = initialResult?.Model as List<User>;
 
@@ -123,10 +123,10 @@ namespace Materials.Tests
                 }
             }
 
-            // Act
+           
             await controller.Delete(1);
 
-            // Получаем пользователей ПОСЛЕ удаления
+            
             var result = await controller.Index() as ViewResult;
             var model = result?.Model as List<User>;
 
@@ -142,7 +142,7 @@ namespace Materials.Tests
                 }
             }
 
-            // Assert
+          
             Assert.NotNull(result);
             Assert.NotNull(model);
             Assert.Single(model);
@@ -153,10 +153,10 @@ namespace Materials.Tests
         [Fact]
         public async Task Edit_UpdatesUser()
         {
-            // Arrange
+          
             var controller = GetControllerWithDbContext();
 
-            // Получаем пользователя из базы
+            
             var resultBeforeEdit = await controller.Index() as ViewResult;
             var modelBeforeEdit = resultBeforeEdit?.Model as List<User>;
             var userToEdit = modelBeforeEdit?.FirstOrDefault(u => u.UserId == 1);
@@ -170,13 +170,12 @@ namespace Materials.Tests
             Console.WriteLine("\n=== ТЕСТ-КЕЙС: Редактирование пользователя ===");
             Console.WriteLine($"[📌 Исходное имя пользователя] {userToEdit.UserName}");
 
-            // Изменяем имя пользователя
+            
             userToEdit.UserName = "UpdatedAdmin";
 
-            // Act
             await controller.Edit(userToEdit);
 
-            // Проверяем изменения через вызов Index()
+          
             var resultAfterEdit = await controller.Index() as ViewResult;
             var modelAfterEdit = resultAfterEdit?.Model as List<User>;
             var updatedUser = modelAfterEdit?.FirstOrDefault(u => u.UserId == 1);
@@ -184,7 +183,6 @@ namespace Materials.Tests
             Console.WriteLine($"[🔵 Ожидалось] Пользователь с ID=1 теперь 'UpdatedAdmin'");
             Console.WriteLine($"[✅ Получено] Пользователь с ID=1 теперь '{updatedUser?.UserName}'");
 
-            // Assert
             Assert.NotNull(updatedUser);
             Assert.Equal("UpdatedAdmin", updatedUser.UserName);
         }

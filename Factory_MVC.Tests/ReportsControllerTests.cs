@@ -22,7 +22,7 @@ public class ReportsControllerTests
         context.Database.EnsureDeleted();
         context.Database.EnsureCreated();
 
-        // Добавляем тестовые данные
+      
         var material = new Material { MaterialId = 1, Name = "Бумага", Unit = "лист" };
         var equipment = new Equipment { EquipmentId = 1, Name = "Принтер" };
         var user = new User { UserId = 1, UserName = "admin", Password = "password123" };
@@ -46,16 +46,16 @@ public class ReportsControllerTests
     [Fact]
     public async Task MaterialUsageReport_ReturnsCorrectData()
     {
-        // Arrange
+        
         var controller = GetControllerWithDbContext();
         DateTime startDate = DateTime.UtcNow.AddDays(-7);
         DateTime endDate = DateTime.UtcNow;
 
-        // Act
+        
         var result = await controller.MaterialUsageReport(startDate, endDate) as ViewResult;
         var model = result?.Model as List<MaterialUsageReportViewModel>;
 
-        // Формируем вывод как тест-кейс
+      
         Console.WriteLine("\n=== ТЕСТ-КЕЙС: Отчёт об использовании материалов ===");
         Console.WriteLine($"[🔵 Ожидалось] 1 материал в отчёте");
         Console.WriteLine($"[✅ Получено] {model?.Count} материалов");
@@ -73,7 +73,7 @@ public class ReportsControllerTests
             Console.WriteLine("[❌ Ошибка] Отчёт пуст! Материалы не найдены.");
         }
 
-        // Assert
+      
         Assert.NotNull(result);
         Assert.NotNull(model);
         Assert.Single(model);
@@ -83,16 +83,16 @@ public class ReportsControllerTests
     [Fact]
     public async Task AverageMaterialConsumptionReport_CalculatesCorrectly()
     {
-        // Arrange
+     
         var controller = GetControllerWithDbContext();
         DateTime startDate = DateTime.UtcNow.AddDays(-7);
         DateTime endDate = DateTime.UtcNow;
 
-        // Act
+       
         var result = await controller.AverageMaterialConsumptionReport(startDate, endDate) as ViewResult;
         var model = result?.Model as List<AverageMaterialConsumptionReportViewModel>;
 
-        // Формируем вывод как тест-кейс
+        
         Console.WriteLine("\n=== ТЕСТ-КЕЙС: Средний расход материалов ===");
         Console.WriteLine($"[🔵 Ожидалось] 1 материал в отчёте");
         Console.WriteLine($"[✅ Получено] {model?.Count} материалов");
@@ -111,7 +111,7 @@ public class ReportsControllerTests
             Console.WriteLine("[❌ Ошибка] Отчёт пуст! Материалы не найдены.");
         }
 
-        // Assert
+       
         Assert.NotNull(result);
         Assert.NotNull(model);
         Assert.Single(model);
